@@ -42,9 +42,9 @@
  */
 
 const std::string rootDir{"testdata"};
-const std::string inputDir{rootDir + "/input"};
-const std::string outputDir{rootDir + "/output"};
-const std::string expectedDir{rootDir + "/expected"};
+const std::string inputDir{rootDir + "/input/"};
+const std::string outputDir{rootDir + "/output/"};
+const std::string expectedDir{rootDir + "/expected/"};
 
 
 static std::vector<std::string> commands{};
@@ -102,12 +102,12 @@ static int genTestScript(const std::string & fileName, const char * program)
  * 
  * @param options to be tested.
  * @param inputFileName without the input directory.
- * @param outputFileName with the output directory.
+ * @param outputFileName without the output directory.
  * @return int the command return value.
  */
 static int executeCommand(const std::string & options, const std::string & inputFileName, const std::string & outputFileName)
 {
-    std::string command{"Balancer " + options + " -i " + inputDir + "/" +inputFileName + " > " + outputFileName};
+    std::string command{"Balancer " + options + " -i " + inputDir + inputFileName + " > " + outputDir + outputFileName};
 
     return execute(command);
 }
@@ -115,15 +115,14 @@ static int executeCommand(const std::string & options, const std::string & input
 /**
  * @brief compares 2 files (the expected file with the generated file).
  * 
- * @param fileName without the expected directory.
- * @param outputFileName with the output directory.
+ * @param fileName without the directory.
  * @return true if the 2 files are the same, false otherwise.
  */
-static bool compareAlbums(const std::string & fileName, const std::string & outputFileName)
+static bool compareAlbums(const std::string & fileName)
 {
     TextFile<> expected{expectedDir + fileName};
     expected.read();
-    TextFile<> output{outputFileName};
+    TextFile<> output{outputDir + fileName};
     output.read();
 
     return expected.equal(output);
@@ -148,45 +147,41 @@ END_TEST
 
 UNIT_TEST(testtime1, "Test input with a variety of time formats generating 'plain' output.")
 
-    std::string fileName{"/testtime1.txt"};
-    std::string outputFileName{outputDir + fileName};
+    const std::string fileName{"testtime1.txt"};
 
-    REQUIRE(executeCommand("-b 1 -p", "TestTimeFormats.txt", outputFileName) == 0)
+    REQUIRE(executeCommand("-b 1 -p", "TestTimeFormats.txt", fileName) == 0)
 
-    REQUIRE(compareAlbums(fileName, outputFileName))
+    REQUIRE(compareAlbums(fileName))
 
 END_TEST
 
 UNIT_TEST(testtime2, "Test input with a variety of time formats generating 'hh:mm:ss' output.")
 
-    std::string fileName{"/testtime2.txt"};
-    std::string outputFileName{outputDir + fileName};
+    const std::string fileName{"testtime2.txt"};
 
-    REQUIRE(executeCommand("-b 1 ", "TestTimeFormats.txt", outputFileName) == 0)
+    REQUIRE(executeCommand("-b 1 ", "TestTimeFormats.txt", fileName) == 0)
 
-    REQUIRE(compareAlbums(fileName, outputFileName))
+    REQUIRE(compareAlbums(fileName))
 
 END_TEST
 
 UNIT_TEST(testtime3, "Test input with a variety of time formats generating 'shuffled' output.")
 
-    std::string fileName{"/testtime3.txt"};
-    std::string outputFileName{outputDir + fileName};
+    const std::string fileName{"testtime3.txt"};
 
-    REQUIRE(executeCommand("-b 1 -s", "TestTimeFormats.txt", outputFileName) == 0)
+    REQUIRE(executeCommand("-b 1 -s", "TestTimeFormats.txt", fileName) == 0)
 
-    REQUIRE(compareAlbums(fileName, outputFileName))
+    REQUIRE(compareAlbums(fileName))
 
 END_TEST
 
 UNIT_TEST(testtime4, "Test input with a variety of time formats generating 'CSV' output.")
 
-    std::string fileName{"/testtime4.txt"};
-    std::string outputFileName{outputDir + fileName};
+    const std::string fileName{"testtime4.txt"};
 
-    REQUIRE(executeCommand("-b 1 -c -a '|'", "TestTimeFormats.txt", outputFileName) == 0)
+    REQUIRE(executeCommand("-b 1 -c -a '|'", "TestTimeFormats.txt", fileName) == 0)
 
-    REQUIRE(compareAlbums(fileName, outputFileName))
+    REQUIRE(compareAlbums(fileName))
 
 END_TEST
 
@@ -198,23 +193,21 @@ END_TEST
 
 UNIT_TEST(testoutput1, "Test 'split' output for 4 boxes (plain CSV).")
 
-    std::string fileName{"/split.txt"};
-    std::string outputFileName{outputDir + fileName};
+    const std::string fileName{"split.txt"};
 
-    REQUIRE(executeCommand("-b 4 -c -a '|' -p", "BeaucoupFish.txt", outputFileName) == 0)
+    REQUIRE(executeCommand("-b 4 -c -a '|' -p", "BeaucoupFish.txt", fileName) == 0)
 
-    REQUIRE(compareAlbums(fileName, outputFileName))
+    REQUIRE(compareAlbums(fileName))
 
 END_TEST
 
 UNIT_TEST(testoutput2, "Test 'shuffle' output for 4 boxes (plain CSV).")
 
-    std::string fileName{"/shuffle.txt"};
-    std::string outputFileName{outputDir + fileName};
+    const std::string fileName{"shuffle.txt"};
 
-    REQUIRE(executeCommand("-b 4 -c -a '|' -p -s", "BeaucoupFish.txt", outputFileName) == 0)
+    REQUIRE(executeCommand("-b 4 -c -a '|' -p -s", "BeaucoupFish.txt", fileName) == 0)
 
-    REQUIRE(compareAlbums(fileName, outputFileName))
+    REQUIRE(compareAlbums(fileName))
 
 END_TEST
 
