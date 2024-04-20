@@ -1,5 +1,5 @@
 .vscode/
-testdata/
+testdata/output/
 *.o
 *.exe
 unittest.*

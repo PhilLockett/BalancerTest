@@ -32,10 +32,8 @@
  */
 
 #include <iostream>
-#include <vector>
 
 #include "TextFile.h"
-#include "BinaryFile.h"
 
 #include "unittest.h"
 
@@ -54,6 +52,7 @@ static std::vector<std::string> commands{};
 static int execute(const std::string & command)
 {
     commands.push_back(command);
+    // std::cout << "Executing: '" << command << "'\n";
 
     return system(command.c_str());
 }
@@ -99,6 +98,11 @@ static int genTestScript(const std::string & fileName, const char * program)
 }
 
 
+bool compareAlbums(const TextFile<> & expected, const TextFile<> & output)
+{
+    return expected.equal(output);
+}
+
 /**
  * @section check test environment setup.
  *
@@ -112,75 +116,115 @@ END_TEST
 
 
 /**
- * @section test summary generation.
+ * @section test input with a variety of time formats.
  *
  */
 
-UNIT_TEST(test1, "Test summary generation for 'test1.txt'.")
+UNIT_TEST(testtime1, "Test input with a variety of time formats generating 'plain' output.")
 
-    std::string fileName{"/test1.txt"};
-    std::string inputFileName{inputDir + fileName};
+    std::string fileName{"/testtime1.txt"};
+    std::string inputFileName{inputDir + "/TestTimeFormats.txt"};
     std::string outputFileName{outputDir + fileName};
 
-    std::string command{"tfc -x -i " + inputFileName + " -o " + outputFileName};
+    std::string command{"Balancer -b 1 -p -i " + inputFileName + " > " + outputFileName};
     REQUIRE(execute(command) == 0)
 
-    BinaryFile<> expected{expectedDir + fileName};
+    TextFile<> expected{expectedDir + fileName};
     expected.read();
-    BinaryFile<> output{outputFileName};
+    TextFile<> output{outputFileName};
     output.read();
     REQUIRE(expected.equal(output))
 
 END_TEST
 
-UNIT_TEST(test2, "Test summary generation for 'test2.txt'.")
+UNIT_TEST(testtime2, "Test input with a variety of time formats generating 'hh:mm:ss' output.")
 
-    std::string fileName{"/test2.txt"};
-    std::string inputFileName{inputDir + fileName};
+    std::string fileName{"/testtime2.txt"};
+    std::string inputFileName{inputDir + "/TestTimeFormats.txt"};
     std::string outputFileName{outputDir + fileName};
 
-    std::string command{"tfc -x -i " + inputFileName + " -o " + outputFileName};
+    std::string command{"Balancer -b 1 -i " + inputFileName + " > " + outputFileName};
     REQUIRE(execute(command) == 0)
 
-    BinaryFile<> expected{expectedDir + fileName};
+    TextFile<> expected{expectedDir + fileName};
     expected.read();
-    BinaryFile<> output{outputFileName};
+    TextFile<> output{outputFileName};
     output.read();
     REQUIRE(expected.equal(output))
 
 END_TEST
 
-UNIT_TEST(test3, "Test summary generation for 'test3.txt'.")
+UNIT_TEST(testtime3, "Test input with a variety of time formats generating 'shuffled' output.")
 
-    std::string fileName{"/test3.txt"};
-    std::string inputFileName{inputDir + fileName};
+    std::string fileName{"/testtime3.txt"};
+    std::string inputFileName{inputDir + "/TestTimeFormats.txt"};
     std::string outputFileName{outputDir + fileName};
 
-    std::string command{"tfc -x -i " + inputFileName + " -o " + outputFileName};
+    std::string command{"Balancer -b 1 -s -i " + inputFileName + " > " + outputFileName};
     REQUIRE(execute(command) == 0)
 
-    BinaryFile<> expected{expectedDir + fileName};
+    TextFile<> expected{expectedDir + fileName};
     expected.read();
-    BinaryFile<> output{outputFileName};
+    TextFile<> output{outputFileName};
     output.read();
     REQUIRE(expected.equal(output))
 
 END_TEST
 
-UNIT_TEST(test4, "Test summary generation for 'test4.txt'.")
+UNIT_TEST(testtime4, "Test input with a variety of time formats generating 'CSV' output.")
 
-    std::string fileName{"/test4.txt"};
-    std::string inputFileName{inputDir + fileName};
+    std::string fileName{"/testtime4.txt"};
+    std::string inputFileName{inputDir + "/TestTimeFormats.txt"};
     std::string outputFileName{outputDir + fileName};
 
-    std::string command{"tfc -x -i " + inputFileName + " -o " + outputFileName};
+    std::string command{"Balancer -b 1 -c -a '|' -i " + inputFileName + " > " + outputFileName};
     REQUIRE(execute(command) == 0)
 
-    BinaryFile<> expected{expectedDir + fileName};
+    TextFile<> expected{expectedDir + fileName};
     expected.read();
-    BinaryFile<> output{outputFileName};
+    TextFile<> output{outputFileName};
     output.read();
     REQUIRE(expected.equal(output))
+
+END_TEST
+
+
+/**
+ * @section test output generation for multiple boxes.
+ *
+ */
+
+UNIT_TEST(testoutput1, "Test 'split' output for 4 boxes (plain CSV).")
+
+    std::string fileName{"/split.txt"};
+    std::string inputFileName{inputDir + "/BeaucoupFish.txt"};
+    std::string outputFileName{outputDir + fileName};
+
+    std::string command{"Balancer -b 4 -c -a '|' -p -i " + inputFileName + " > " + outputFileName};
+    REQUIRE(execute(command) == 0)
+
+    TextFile<> expected{expectedDir + fileName};
+    expected.read();
+    TextFile<> output{outputFileName};
+    output.read();
+    REQUIRE(compareAlbums(expected, output))
+
+END_TEST
+
+UNIT_TEST(testoutput2, "Test 'shuffle' output for 4 boxes (plain CSV).")
+
+    std::string fileName{"/shuffle.txt"};
+    std::string inputFileName{inputDir + "/BeaucoupFish.txt"};
+    std::string outputFileName{outputDir + fileName};
+
+    std::string command{"Balancer -b 4 -c -a '|' -p -s -i " + inputFileName + " > " + outputFileName};
+    REQUIRE(execute(command) == 0)
+
+    TextFile<> expected{expectedDir + fileName};
+    expected.read();
+    TextFile<> output{outputFileName};
+    output.read();
+    REQUIRE(compareAlbums(expected, output))
 
 END_TEST
 
@@ -193,13 +237,15 @@ int runTests(const char * program)
     TIMINGS_OFF
 
     RUN_TEST(test0)
-    RUN_TEST(test1)
-    RUN_TEST(test2)
-    RUN_TEST(test3)
-    RUN_TEST(test4)
+    RUN_TEST(testtime1)
+    RUN_TEST(testtime2)
+    RUN_TEST(testtime3)
+    RUN_TEST(testtime4)
+    RUN_TEST(testoutput1)
+    RUN_TEST(testoutput2)
 
 
-    const int err = FINISHED;
+    const auto err{FINISHED};
     if (!err)
     {
         std::cout << "\nCommands executed:\n";
@@ -218,12 +264,9 @@ int runTests(const char * program)
  * @param  argv - command line argument vector.
  * @return error value or 0 if no errors.
  */
-extern int init(const std::string & root, const std::string & input, const std::string & output, const std::string & expected);
 
 int main(int argc, char *argv[])
 {
-    init(rootDir, inputDir, outputDir, expectedDir);
-
     return runTests(argv[0]);
 }
 
