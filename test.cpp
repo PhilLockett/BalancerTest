@@ -97,8 +97,29 @@ static int genTestScript(const std::string & fileName, const char * program)
     return 1;
 }
 
+/**
+ * @brief Constructs a Balancer command using supplied parameters and executes it.
+ * 
+ * @param options to be tested.
+ * @param inputFileName without the input directory.
+ * @param outputFileName with the output directory.
+ * @return int the command return value.
+ */
+static int executeCommand(const std::string & options, const std::string & inputFileName, const std::string & outputFileName)
+{
+    std::string command{"Balancer " + options + " -i " + inputDir + "/" +inputFileName + " > " + outputFileName};
 
-bool compareAlbums(const std::string & fileName, const std::string & outputFileName)
+    return execute(command);
+}
+
+/**
+ * @brief compares 2 files (the expected file with the generated file).
+ * 
+ * @param fileName without the expected directory.
+ * @param outputFileName with the output directory.
+ * @return true if the 2 files are the same, false otherwise.
+ */
+static bool compareAlbums(const std::string & fileName, const std::string & outputFileName)
 {
     TextFile<> expected{expectedDir + fileName};
     expected.read();
@@ -128,11 +149,9 @@ END_TEST
 UNIT_TEST(testtime1, "Test input with a variety of time formats generating 'plain' output.")
 
     std::string fileName{"/testtime1.txt"};
-    std::string inputFileName{inputDir + "/TestTimeFormats.txt"};
     std::string outputFileName{outputDir + fileName};
 
-    std::string command{"Balancer -b 1 -p -i " + inputFileName + " > " + outputFileName};
-    REQUIRE(execute(command) == 0)
+    REQUIRE(executeCommand("-b 1 -p", "TestTimeFormats.txt", outputFileName) == 0)
 
     REQUIRE(compareAlbums(fileName, outputFileName))
 
@@ -141,11 +160,9 @@ END_TEST
 UNIT_TEST(testtime2, "Test input with a variety of time formats generating 'hh:mm:ss' output.")
 
     std::string fileName{"/testtime2.txt"};
-    std::string inputFileName{inputDir + "/TestTimeFormats.txt"};
     std::string outputFileName{outputDir + fileName};
 
-    std::string command{"Balancer -b 1 -i " + inputFileName + " > " + outputFileName};
-    REQUIRE(execute(command) == 0)
+    REQUIRE(executeCommand("-b 1 ", "TestTimeFormats.txt", outputFileName) == 0)
 
     REQUIRE(compareAlbums(fileName, outputFileName))
 
@@ -154,11 +171,9 @@ END_TEST
 UNIT_TEST(testtime3, "Test input with a variety of time formats generating 'shuffled' output.")
 
     std::string fileName{"/testtime3.txt"};
-    std::string inputFileName{inputDir + "/TestTimeFormats.txt"};
     std::string outputFileName{outputDir + fileName};
 
-    std::string command{"Balancer -b 1 -s -i " + inputFileName + " > " + outputFileName};
-    REQUIRE(execute(command) == 0)
+    REQUIRE(executeCommand("-b 1 -s", "TestTimeFormats.txt", outputFileName) == 0)
 
     REQUIRE(compareAlbums(fileName, outputFileName))
 
@@ -167,11 +182,9 @@ END_TEST
 UNIT_TEST(testtime4, "Test input with a variety of time formats generating 'CSV' output.")
 
     std::string fileName{"/testtime4.txt"};
-    std::string inputFileName{inputDir + "/TestTimeFormats.txt"};
     std::string outputFileName{outputDir + fileName};
 
-    std::string command{"Balancer -b 1 -c -a '|' -i " + inputFileName + " > " + outputFileName};
-    REQUIRE(execute(command) == 0)
+    REQUIRE(executeCommand("-b 1 -c -a '|'", "TestTimeFormats.txt", outputFileName) == 0)
 
     REQUIRE(compareAlbums(fileName, outputFileName))
 
@@ -186,11 +199,9 @@ END_TEST
 UNIT_TEST(testoutput1, "Test 'split' output for 4 boxes (plain CSV).")
 
     std::string fileName{"/split.txt"};
-    std::string inputFileName{inputDir + "/BeaucoupFish.txt"};
     std::string outputFileName{outputDir + fileName};
 
-    std::string command{"Balancer -b 4 -c -a '|' -p -i " + inputFileName + " > " + outputFileName};
-    REQUIRE(execute(command) == 0)
+    REQUIRE(executeCommand("-b 4 -c -a '|' -p", "BeaucoupFish.txt", outputFileName) == 0)
 
     REQUIRE(compareAlbums(fileName, outputFileName))
 
@@ -199,11 +210,9 @@ END_TEST
 UNIT_TEST(testoutput2, "Test 'shuffle' output for 4 boxes (plain CSV).")
 
     std::string fileName{"/shuffle.txt"};
-    std::string inputFileName{inputDir + "/BeaucoupFish.txt"};
     std::string outputFileName{outputDir + fileName};
 
-    std::string command{"Balancer -b 4 -c -a '|' -p -s -i " + inputFileName + " > " + outputFileName};
-    REQUIRE(execute(command) == 0)
+    REQUIRE(executeCommand("-b 4 -c -a '|' -p -s", "BeaucoupFish.txt", outputFileName) == 0)
 
     REQUIRE(compareAlbums(fileName, outputFileName))
 
