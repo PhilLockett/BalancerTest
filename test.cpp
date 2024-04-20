@@ -98,8 +98,13 @@ static int genTestScript(const std::string & fileName, const char * program)
 }
 
 
-bool compareAlbums(const TextFile<> & expected, const TextFile<> & output)
+bool compareAlbums(const std::string & fileName, const std::string & outputFileName)
 {
+    TextFile<> expected{expectedDir + fileName};
+    expected.read();
+    TextFile<> output{outputFileName};
+    output.read();
+
     return expected.equal(output);
 }
 
@@ -129,11 +134,7 @@ UNIT_TEST(testtime1, "Test input with a variety of time formats generating 'plai
     std::string command{"Balancer -b 1 -p -i " + inputFileName + " > " + outputFileName};
     REQUIRE(execute(command) == 0)
 
-    TextFile<> expected{expectedDir + fileName};
-    expected.read();
-    TextFile<> output{outputFileName};
-    output.read();
-    REQUIRE(expected.equal(output))
+    REQUIRE(compareAlbums(fileName, outputFileName))
 
 END_TEST
 
@@ -146,11 +147,7 @@ UNIT_TEST(testtime2, "Test input with a variety of time formats generating 'hh:m
     std::string command{"Balancer -b 1 -i " + inputFileName + " > " + outputFileName};
     REQUIRE(execute(command) == 0)
 
-    TextFile<> expected{expectedDir + fileName};
-    expected.read();
-    TextFile<> output{outputFileName};
-    output.read();
-    REQUIRE(expected.equal(output))
+    REQUIRE(compareAlbums(fileName, outputFileName))
 
 END_TEST
 
@@ -163,11 +160,7 @@ UNIT_TEST(testtime3, "Test input with a variety of time formats generating 'shuf
     std::string command{"Balancer -b 1 -s -i " + inputFileName + " > " + outputFileName};
     REQUIRE(execute(command) == 0)
 
-    TextFile<> expected{expectedDir + fileName};
-    expected.read();
-    TextFile<> output{outputFileName};
-    output.read();
-    REQUIRE(expected.equal(output))
+    REQUIRE(compareAlbums(fileName, outputFileName))
 
 END_TEST
 
@@ -180,11 +173,7 @@ UNIT_TEST(testtime4, "Test input with a variety of time formats generating 'CSV'
     std::string command{"Balancer -b 1 -c -a '|' -i " + inputFileName + " > " + outputFileName};
     REQUIRE(execute(command) == 0)
 
-    TextFile<> expected{expectedDir + fileName};
-    expected.read();
-    TextFile<> output{outputFileName};
-    output.read();
-    REQUIRE(expected.equal(output))
+    REQUIRE(compareAlbums(fileName, outputFileName))
 
 END_TEST
 
@@ -203,11 +192,7 @@ UNIT_TEST(testoutput1, "Test 'split' output for 4 boxes (plain CSV).")
     std::string command{"Balancer -b 4 -c -a '|' -p -i " + inputFileName + " > " + outputFileName};
     REQUIRE(execute(command) == 0)
 
-    TextFile<> expected{expectedDir + fileName};
-    expected.read();
-    TextFile<> output{outputFileName};
-    output.read();
-    REQUIRE(compareAlbums(expected, output))
+    REQUIRE(compareAlbums(fileName, outputFileName))
 
 END_TEST
 
@@ -220,11 +205,7 @@ UNIT_TEST(testoutput2, "Test 'shuffle' output for 4 boxes (plain CSV).")
     std::string command{"Balancer -b 4 -c -a '|' -p -s -i " + inputFileName + " > " + outputFileName};
     REQUIRE(execute(command) == 0)
 
-    TextFile<> expected{expectedDir + fileName};
-    expected.read();
-    TextFile<> output{outputFileName};
-    output.read();
-    REQUIRE(compareAlbums(expected, output))
+    REQUIRE(compareAlbums(fileName, outputFileName))
 
 END_TEST
 
