@@ -159,7 +159,7 @@ UNIT_TEST(testtime2, "Test input with a variety of time formats generating 'hh:m
 
     const std::string fileName{"testtime2.txt"};
 
-    REQUIRE(executeCommand("-b 1 ", "TestTimeFormats.txt", fileName) == 0)
+    REQUIRE(executeCommand("-b 1", "TestTimeFormats.txt", fileName) == 0)
 
     REQUIRE(compareAlbums(fileName))
 
@@ -191,7 +191,7 @@ END_TEST
  *
  */
 
-UNIT_TEST(testoutput1, "Test 'split' output for 4 boxes (plain CSV).")
+UNIT_TEST(testoutput11, "Test 'split' output for 4 boxes (plain CSV).")
 
     const std::string fileName{"split.txt"};
 
@@ -201,11 +201,47 @@ UNIT_TEST(testoutput1, "Test 'split' output for 4 boxes (plain CSV).")
 
 END_TEST
 
-UNIT_TEST(testoutput2, "Test 'shuffle' output for 4 boxes (plain CSV).")
+UNIT_TEST(testoutput12, "Test 'shuffle' output for 4 boxes (plain CSV).")
 
     const std::string fileName{"shuffle.txt"};
 
     REQUIRE(executeCommand("-b 4 -c -a '|' -p -s", "BeaucoupFish.txt", fileName) == 0)
+
+    REQUIRE(compareAlbums(fileName))
+
+END_TEST
+
+
+/**
+ * @section test output generation for duration.
+ *
+ */
+
+UNIT_TEST(testoutput21, "Test 'split' output for 22 minute duration (even boxes plain CSV).")
+
+    const std::string fileName{"split21.txt"};
+
+    REQUIRE(executeCommand("-d 22:00 -e -c -a '|' -p", "QueenBest.txt", fileName) == 0)
+
+    REQUIRE(compareAlbums(fileName))
+
+END_TEST
+
+UNIT_TEST(testoutput22, "Test 'split' output for 12 boxes (plain CSV - same result as above).")
+
+    const std::string fileName{"split22.txt"};
+
+    REQUIRE(executeCommand("-b 12 -c -a '|' -p", "QueenBest.txt", fileName) == 0)
+
+    REQUIRE(compareAlbums(fileName))
+
+END_TEST
+
+UNIT_TEST(testoutput23, "Test 'shuffle' output for 22 minute duration (even boxes plain CSV).")
+
+    const std::string fileName{"shuffle23.txt"};
+
+    REQUIRE(executeCommand("-d 22:00 -e -c -a '|' -p -s", "QueenBest.txt", fileName) == 0)
 
     REQUIRE(compareAlbums(fileName))
 
@@ -224,8 +260,11 @@ int runTests(const char * program)
     RUN_TEST(testtime2)
     RUN_TEST(testtime3)
     RUN_TEST(testtime4)
-    RUN_TEST(testoutput1)
-    RUN_TEST(testoutput2)
+    RUN_TEST(testoutput11)
+    RUN_TEST(testoutput12)
+    RUN_TEST(testoutput21)
+    RUN_TEST(testoutput22)
+    RUN_TEST(testoutput23)
 
 
     const auto err{FINISHED};
