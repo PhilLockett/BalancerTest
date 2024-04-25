@@ -230,6 +230,44 @@ UNIT_TEST(testoutput23, "Test 'shuffle' output for 22 minute duration (even boxe
 END_TEST
 
 
+/**
+ * @section test output generation for ideal case.
+ *
+ */
+
+UNIT_TEST(testideal11, "Test ideal 'split' output for 4 boxes.")
+
+    REQUIRE(executeCommand("-b 4 -x", "Ideal.txt", "ideal11.txt") == 0)
+
+    REQUIRE(compareAlbums("ideal11.txt"))
+
+END_TEST
+
+UNIT_TEST(testideal12, "Test ideal 'split' output for 20 minute duration.")
+
+    REQUIRE(executeCommand("-d 20:00 -x", "Ideal.txt", "ideal12.txt") == 0)
+
+    REQUIRE(compareAlbums("ideal12.txt"))
+
+END_TEST
+
+UNIT_TEST(testideal21, "Test ideal 'shuffle' output for 4 boxes.")
+
+    REQUIRE(executeCommand("-b 4 -x -s", "Ideal.txt", "ideal21.txt") == 0)
+
+    REQUIRE(compareAlbums("ideal21.txt"))
+
+END_TEST
+
+UNIT_TEST(testideal22, "Test ideal 'shuffle' output for 20 minute duration.")
+
+    REQUIRE(executeCommand("-d 20:00 -x -s", "Ideal.txt", "ideal22.txt") == 0)
+
+    REQUIRE(compareAlbums("ideal22.txt"))
+
+END_TEST
+
+
 
 int runTests(const char * program)
 {
@@ -247,6 +285,10 @@ int runTests(const char * program)
     RUN_TEST(testoutput21)
     RUN_TEST(testoutput22)
     RUN_TEST(testoutput23)
+    RUN_TEST(testideal11)
+    RUN_TEST(testideal12)
+    RUN_TEST(testideal21)
+    RUN_TEST(testideal22)
 
 
     const auto err{FINISHED};
