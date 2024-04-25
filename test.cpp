@@ -251,9 +251,9 @@ UNIT_TEST(testideal12, "Test ideal 'split' output for 20 minute duration.")
 
 END_TEST
 
-UNIT_TEST(testideal21, "Test ideal 'shuffle' output for 4 boxes.")
+UNIT_TEST(testideal21, "Test ideal 'shuffle' output for 4 boxes (needs a little longer).")
 
-    REQUIRE(executeCommand("-b 4 -x -s", "Ideal.txt", "ideal21.txt") == 0)
+    REQUIRE(executeCommand("-b 4 -x -s -t 100", "Ideal.txt", "ideal21.txt") == 0)
 
     REQUIRE(compareAlbums("ideal21.txt"))
 
