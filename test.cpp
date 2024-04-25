@@ -147,41 +147,33 @@ END_TEST
 
 UNIT_TEST(testtime1, "Test input with a variety of time formats generating 'plain' output.")
 
-    const std::string fileName{"testtime1.txt"};
+    REQUIRE(executeCommand("-b 1 -p", "TestTimeFormats.txt", "testtime1.txt") == 0)
 
-    REQUIRE(executeCommand("-b 1 -p", "TestTimeFormats.txt", fileName) == 0)
-
-    REQUIRE(compareAlbums(fileName))
+    REQUIRE(compareAlbums("testtime1.txt"))
 
 END_TEST
 
 UNIT_TEST(testtime2, "Test input with a variety of time formats generating 'hh:mm:ss' output.")
 
-    const std::string fileName{"testtime2.txt"};
+    REQUIRE(executeCommand("-b 1", "TestTimeFormats.txt", "testtime2.txt") == 0)
 
-    REQUIRE(executeCommand("-b 1", "TestTimeFormats.txt", fileName) == 0)
-
-    REQUIRE(compareAlbums(fileName))
+    REQUIRE(compareAlbums("testtime2.txt"))
 
 END_TEST
 
 UNIT_TEST(testtime3, "Test input with a variety of time formats generating 'shuffled' output.")
 
-    const std::string fileName{"testtime3.txt"};
+    REQUIRE(executeCommand("-b 1 -s", "TestTimeFormats.txt", "testtime3.txt") == 0)
 
-    REQUIRE(executeCommand("-b 1 -s", "TestTimeFormats.txt", fileName) == 0)
-
-    REQUIRE(compareAlbums(fileName))
+    REQUIRE(compareAlbums("testtime3.txt"))
 
 END_TEST
 
 UNIT_TEST(testtime4, "Test input with a variety of time formats generating 'CSV' output.")
 
-    const std::string fileName{"testtime4.txt"};
+    REQUIRE(executeCommand("-b 1 -c -a '|'", "TestTimeFormats.txt", "testtime4.txt") == 0)
 
-    REQUIRE(executeCommand("-b 1 -c -a '|'", "TestTimeFormats.txt", fileName) == 0)
-
-    REQUIRE(compareAlbums(fileName))
+    REQUIRE(compareAlbums("testtime4.txt"))
 
 END_TEST
 
@@ -193,21 +185,17 @@ END_TEST
 
 UNIT_TEST(testoutput11, "Test 'split' output for 4 boxes (plain CSV).")
 
-    const std::string fileName{"split.txt"};
+    REQUIRE(executeCommand("-b 4 -c -a '|' -p", "BeaucoupFish.txt", "split.txt") == 0)
 
-    REQUIRE(executeCommand("-b 4 -c -a '|' -p", "BeaucoupFish.txt", fileName) == 0)
-
-    REQUIRE(compareAlbums(fileName))
+    REQUIRE(compareAlbums("split.txt"))
 
 END_TEST
 
 UNIT_TEST(testoutput12, "Test 'shuffle' output for 4 boxes (plain CSV).")
 
-    const std::string fileName{"shuffle.txt"};
+    REQUIRE(executeCommand("-b 4 -c -a '|' -p -s", "BeaucoupFish.txt", "shuffle.txt") == 0)
 
-    REQUIRE(executeCommand("-b 4 -c -a '|' -p -s", "BeaucoupFish.txt", fileName) == 0)
-
-    REQUIRE(compareAlbums(fileName))
+    REQUIRE(compareAlbums("shuffle.txt"))
 
 END_TEST
 
@@ -219,31 +207,25 @@ END_TEST
 
 UNIT_TEST(testoutput21, "Test 'split' output for 22 minute duration (even boxes plain CSV).")
 
-    const std::string fileName{"split21.txt"};
+    REQUIRE(executeCommand("-d 22:00 -e -c -a '|' -p", "QueenBest.txt", "split21.txt") == 0)
 
-    REQUIRE(executeCommand("-d 22:00 -e -c -a '|' -p", "QueenBest.txt", fileName) == 0)
-
-    REQUIRE(compareAlbums(fileName))
+    REQUIRE(compareAlbums("split21.txt"))
 
 END_TEST
 
 UNIT_TEST(testoutput22, "Test 'split' output for 12 boxes (plain CSV - same result as above).")
 
-    const std::string fileName{"split22.txt"};
+    REQUIRE(executeCommand("-b 12 -c -a '|' -p", "QueenBest.txt", "split22.txt") == 0)
 
-    REQUIRE(executeCommand("-b 12 -c -a '|' -p", "QueenBest.txt", fileName) == 0)
-
-    REQUIRE(compareAlbums(fileName))
+    REQUIRE(compareAlbums("split22.txt"))
 
 END_TEST
 
 UNIT_TEST(testoutput23, "Test 'shuffle' output for 22 minute duration (even boxes plain CSV).")
 
-    const std::string fileName{"shuffle23.txt"};
+    REQUIRE(executeCommand("-d 22:00 -e -c -a '|' -p -s", "QueenBest.txt", "shuffle23.txt") == 0)
 
-    REQUIRE(executeCommand("-d 22:00 -e -c -a '|' -p -s", "QueenBest.txt", fileName) == 0)
-
-    REQUIRE(compareAlbums(fileName))
+    REQUIRE(compareAlbums("shuffle23.txt"))
 
 END_TEST
 
