@@ -322,9 +322,9 @@ UNIT_TEST(testideal12, "Test ideal 'split' output for 20 minute duration.")
 
 END_TEST
 
-UNIT_TEST(testideal21, "Test ideal 'shuffle' output for 4 boxes (needs a little longer).")
+UNIT_TEST(testideal21, "Test ideal 'shuffle' output for 4 boxes.")
 
-    REQUIRE(executeCommand("-b 4 -x -s -t 100", "Ideal.txt", "ideal21.txt") == 0)
+    REQUIRE(executeCommand("-b 4 -x -s", "Ideal.txt", "ideal21.txt") == 0)
 
     REQUIRE(compareAlbums("ideal21.txt"))
 
@@ -411,7 +411,7 @@ int runTests(const char * program)
 
     RUN_TEST(testideal11)
     RUN_TEST(testideal12)
-    // RUN_TEST(testideal21)
+    RUN_TEST(testideal21)
     RUN_TEST(testideal22)
 
     RUN_TEST(testcompare12)
