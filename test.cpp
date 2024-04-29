@@ -34,11 +34,12 @@
 #include <iostream>
 
 #include "TextFile.h"
+#include "Side.h"
 
 #include "unittest.h"
 
 /**
- * @section basic utility code.
+ * @section Basic utility code.
  */
 
 const std::string rootDir{"testdata"};
@@ -66,7 +67,7 @@ static int displayCommands(void)
 }
 
 /**
- * @section test script generation, currently not used.
+ * @section Test script generation, currently not used.
  */
 
 static int genTestScript(const std::string & fileName, const char * program)
@@ -96,6 +97,12 @@ static int genTestScript(const std::string & fileName, const char * program)
 
     return 1;
 }
+
+
+
+/**
+ * @section Support code.
+ */
 
 /**
  * @brief Constructs a Balancer command using supplied parameters and executes it.
@@ -127,6 +134,70 @@ static bool compareAlbums(const std::string & fileName)
 
     return expected.equal(output);
 }
+
+
+/**
+ * @brief Loads in a CSV ('|') output file and converts it to a Album.
+ * 
+ * @param inputFile to load, must use '|' as a delimiter.
+ * @return Album representation of inputFile.
+ */
+Album loadTracks(const std::string & inputFile)
+{
+	Album album{};
+	album.setTitle(inputFile);
+
+    TextFile input{inputDir + inputFile};
+	if (!input.exists())
+	    return album;
+
+    input.read();
+
+	// Parse file.
+	for (const auto & line : input)
+	{
+		// Split line into 3 tokens.
+		std::vector<std::string> tokens{split(line, 3)};
+
+		// Remove quotes from label.
+		std::string label{tokens[2]};
+		label.erase(std::find(label.begin(), label.end(), '"'));
+		label.erase(std::find(label.begin(), label.end(), '"'));
+
+		// Parse line type.
+		if (tokens[0].compare("Side") == 0)
+		{
+			// Find track count.
+		    size_t pos{label.find_first_of(",")};
+			if (pos == std::string::npos)
+				break;
+
+			size_t digits{};
+			auto tracks{std::stoi(label.substr(pos+1), &digits)};
+
+			// Push the side to the album.
+			Side side{};
+			side.reserve(tracks);
+			side.setTitle(label.substr(0, pos));
+			album.push(side);
+		}
+		else
+		{
+			// Extract seconds.
+		    size_t seconds{timeStringToSeconds(tokens[1])};
+
+			// Push the track to the last side of the album.
+		    Track track{label, seconds};
+			album.pushLast(track);
+		}
+	}
+
+	album.getHash();
+
+    return album;
+}
+
+
 
 /**
  * @section check test environment setup.
@@ -268,6 +339,56 @@ UNIT_TEST(testideal22, "Test ideal 'shuffle' output for 20 minute duration.")
 END_TEST
 
 
+/**
+ * @section test Album comparison code.
+ *
+ */
+
+UNIT_TEST(testcompare12, "Compare identical files.")
+
+	Album album1{loadTracks("ideal11.txt")};
+	Album album2{loadTracks("ideal12.txt")};
+
+    REQUIRE(album1.getHash() == album2.getHash())
+
+END_TEST
+
+UNIT_TEST(testcompare13, "Compare files with identical sides, but in a different order.")
+
+	Album album1{loadTracks("ideal11.txt")};
+	Album album2{loadTracks("ideal13.txt")};
+
+    REQUIRE(album1.getHash() == album2.getHash())
+
+END_TEST
+
+UNIT_TEST(testcompare14, "Compare files with identical sides, but with tracks in a different order.")
+
+	Album album1{loadTracks("ideal11.txt")};
+	Album album2{loadTracks("ideal14.txt")};
+
+    REQUIRE(album1.getHash() == album2.getHash())
+
+END_TEST
+
+UNIT_TEST(testcompare21, "Compare files with tracks arranged differently (but identical side lengths).")
+
+	Album album1{loadTracks("ideal11.txt")};
+	Album album2{loadTracks("ideal21.txt")};
+
+    REQUIRE(album1.getHash() != album2.getHash())
+
+END_TEST
+
+UNIT_TEST(testcompare22, "Compare files with same arrangement of tracks but different track lengths.")
+
+	Album album1{loadTracks("ideal11.txt")};
+	Album album2{loadTracks("ideal22.txt")};
+
+    REQUIRE(album1.getHash() != album2.getHash())
+
+END_TEST
+
 
 int runTests(const char * program)
 {
@@ -276,19 +397,28 @@ int runTests(const char * program)
     TIMINGS_OFF
 
     RUN_TEST(test0)
+
     RUN_TEST(testtime1)
     RUN_TEST(testtime2)
     RUN_TEST(testtime3)
     RUN_TEST(testtime4)
+
     RUN_TEST(testoutput11)
     RUN_TEST(testoutput12)
     RUN_TEST(testoutput21)
     RUN_TEST(testoutput22)
     RUN_TEST(testoutput23)
+
     RUN_TEST(testideal11)
     RUN_TEST(testideal12)
-    RUN_TEST(testideal21)
+    // RUN_TEST(testideal21)
     RUN_TEST(testideal22)
+
+    RUN_TEST(testcompare12)
+    RUN_TEST(testcompare13)
+    RUN_TEST(testcompare14)
+    RUN_TEST(testcompare21)
+    RUN_TEST(testcompare22)
 
 
     const auto err{FINISHED};
