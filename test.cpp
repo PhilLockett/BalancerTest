@@ -32,6 +32,8 @@
  */
 
 #include <iostream>
+#include <algorithm>
+#include <filesystem>
 
 #include "TextFile.h"
 #include "Side.h"
@@ -49,6 +51,12 @@ const std::string expectedDir{rootDir + "/expected/"};
 
 
 static std::vector<std::string> commands{};
+
+
+static bool createDirectory(const std::string & path)
+{
+    return std::filesystem::create_directories(path);
+}
 
 static int execute(const std::string & command)
 {
@@ -443,6 +451,8 @@ int runTests(const char * program)
 
 int main(int argc, char *argv[])
 {
+    createDirectory(outputDir);
+
     return runTests(argv[0]);
 }
 
