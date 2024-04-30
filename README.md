@@ -12,11 +12,11 @@ code first clone the unit test code:
     git clone https://github.com/PhilLockett/UnitTest.git
 
 Then copy unittest.cpp and unittest.h into the BalancerTest directory before 
-executing make. Therefore, to clone, build and run this code, execute the
+executing 'make'. Therefore, to clone, build and run this code, execute the
 following unix/linux commands:
 
-    git clone https://github.com/PhilLockett/tfcTest.git
-    cd tfcTest/
+    git clone https://github.com/PhilLockett/BalancerTest.git
+    cd BalancerTest/
     cp ../UnitTest/unittest.cpp .
     cp ../UnitTest/unittest.h .
     make
