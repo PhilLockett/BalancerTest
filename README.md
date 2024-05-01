@@ -1,19 +1,21 @@
 # BalancerTest
-Test code for `Balancer` (a command-line utility for balancing 'tracks' across
-multiple 'sides').
+Test code for [Balancer](https://github.com/PhilLockett/Balancer) (a
+command-line utility for balancing 'tracks' across multiple 'sides').
 
 ## Overview
 A sequence of regression tests for the [Balancer](https://github.com/PhilLockett/Balancer) utility.
 
 ## Cloning and Running
-The test code is dependent on UnitTest. To compile and run the `BalancerTest`
-code first clone the unit test code:
+This test code is dependent on [UnitTest](https://github.com/PhilLockett/UnitTest).
+To compile and run the `BalancerTest` code, first clone the unit test code:
 
     git clone https://github.com/PhilLockett/UnitTest.git
 
 Then copy unittest.cpp and unittest.h into the `BalancerTest` directory before
-executing 'make'. Therefore, to clone, build and run `BalancerTest`, execute
-the following unix/linux commands:
+executing 'make'.
+
+Therefore, to clone, build and run `BalancerTest`, execute the following
+unix/linux commands:
 
     git clone https://github.com/PhilLockett/BalancerTest.git
     cd BalancerTest/
