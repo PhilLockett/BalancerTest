@@ -40,6 +40,7 @@
 
 #include "unittest.h"
 
+
 /**
  * @section Basic utility code.
  */
@@ -278,6 +279,14 @@ UNIT_TEST(testoutput12, "Test 'shuffle' output for 4 boxes (plain CSV).")
 
 END_TEST
 
+UNIT_TEST(testoutput13, "Test 'brute force' output for 4 boxes (plain CSV).")
+
+    REQUIRE(executeCommand("-b 4 -c -a '|' -p -f", "BeaucoupFish.txt", "force.txt") == 0)
+
+    REQUIRE(compareAlbums("force.txt"))
+
+END_TEST
+
 
 /**
  * @section test output generation for duration.
@@ -322,7 +331,7 @@ UNIT_TEST(testideal11, "Test ideal 'split' output for 4 boxes.")
 
 END_TEST
 
-UNIT_TEST(testideal12, "Test ideal 'split' output for 20 minute duration.")
+UNIT_TEST(testideal12, "Test ideal 'split' output for duration of 20 minutes/side.")
 
     REQUIRE(executeCommand("-d 20:00 -x", "Ideal.txt", "ideal12.txt") == 0)
 
@@ -338,11 +347,27 @@ UNIT_TEST(testideal21, "Test ideal 'shuffle' output for 4 boxes.")
 
 END_TEST
 
-UNIT_TEST(testideal22, "Test ideal 'shuffle' output for 20 minute duration.")
+UNIT_TEST(testideal22, "Test ideal 'shuffle' output for duration of 20 minutes/side.")
 
     REQUIRE(executeCommand("-d 20:00 -x -s", "Ideal.txt", "ideal22.txt") == 0)
 
     REQUIRE(compareAlbums("ideal22.txt"))
+
+END_TEST
+
+UNIT_TEST(testideal31, "Test ideal 'brute force' output for 4 boxes.")
+
+    REQUIRE(executeCommand("-b 4 -x -f", "Ideal.txt", "ideal31.txt") == 0)
+
+    REQUIRE(compareAlbums("ideal31.txt"))
+
+END_TEST
+
+UNIT_TEST(testideal32, "Test ideal 'brute force' output for duration of 20 minutes/side.")
+
+    REQUIRE(executeCommand("-d 20:00 -x -f", "Ideal.txt", "ideal32.txt") == 0)
+
+    REQUIRE(compareAlbums("ideal32.txt"))
 
 END_TEST
 
@@ -398,9 +423,12 @@ UNIT_TEST(testcompare22, "Compare files with same arrangement of tracks but diff
 END_TEST
 
 
-int runTests(const char * program)
+int runTests(const char * program, const bool testAll)
 {
-    std::cout << "\nExecuting all tests.\n";
+    if (testAll)
+        std::cout << "\nExecuting all tests.\n";
+    else
+        std::cout << "\nExecuting quick tests.\n";
 
     TIMINGS_OFF
 
@@ -413,6 +441,7 @@ int runTests(const char * program)
 
     RUN_TEST(testoutput11)
     RUN_TEST(testoutput12)
+    if (testAll) RUN_TEST(testoutput13)
     RUN_TEST(testoutput21)
     RUN_TEST(testoutput22)
     RUN_TEST(testoutput23)
@@ -421,6 +450,8 @@ int runTests(const char * program)
     RUN_TEST(testideal12)
     RUN_TEST(testideal21)
     RUN_TEST(testideal22)
+    if (testAll) RUN_TEST(testideal31)
+    if (testAll) RUN_TEST(testideal32)
 
     RUN_TEST(testcompare12)
     RUN_TEST(testcompare13)
@@ -451,8 +482,9 @@ int runTests(const char * program)
 
 int main(int argc, char *argv[])
 {
+    const bool testAll{argc > 1};
     createDirectory(outputDir);
 
-    return runTests(argv[0]);
+    return runTests(argv[0], testAll);
 }
 

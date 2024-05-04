@@ -1,0 +1,61 @@
+items:
+   0  00:13:00 - Track 1 1
+   1  00:07:00 - Track 1 2
+   2  00:10:00 - Track 2 1
+   3  00:10:00 - Track 2 2
+   4  00:04:00 - Track 3 1
+   5  00:04:00 - Track 3 2
+   6  00:04:00 - Track 3 3
+   7  00:04:00 - Track 3 4
+   8  00:04:00 - Track 3 5
+   9  00:02:30 - Track 4 1
+  10  00:02:30 - Track 4 2
+  11  00:02:30 - Track 4 3
+  12  00:02:30 - Track 4 4
+  13  00:02:30 - Track 4 5
+  14  00:02:30 - Track 4 6
+  15  00:02:30 - Track 4 7
+  16  00:02:30 - Track 4 8
+
+Total duration 01:20:00
+Required duration 00:22:00
+Required timeout 00:01:00
+Optimum number of sides 4
+Minimum side length 00:20:00
+Packed sides
+deviation 0
+Side 1 - 2 tracks 00:20:00
+Side 2 - 2 tracks 00:20:00
+Side 3 - 5 tracks 00:20:00
+Side 4 - 8 tracks 00:20:00
+
+The recommended sides are
+Side 1 - 2 tracks
+00:13:00 - Track 1 1
+00:07:00 - Track 1 2
+00:20:00
+
+Side 2 - 2 tracks
+00:10:00 - Track 2 1
+00:10:00 - Track 2 2
+00:20:00
+
+Side 3 - 5 tracks
+00:04:00 - Track 3 1
+00:04:00 - Track 3 2
+00:04:00 - Track 3 3
+00:04:00 - Track 3 4
+00:04:00 - Track 3 5
+00:20:00
+
+Side 4 - 8 tracks
+00:02:30 - Track 4 1
+00:02:30 - Track 4 2
+00:02:30 - Track 4 3
+00:02:30 - Track 4 4
+00:02:30 - Track 4 5
+00:02:30 - Track 4 6
+00:02:30 - Track 4 7
+00:02:30 - Track 4 8
+00:20:00
+
