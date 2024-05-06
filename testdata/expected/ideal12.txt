@@ -18,8 +18,8 @@ items:
   16  00:02:30 - Track 4 8
 
 Total duration 01:20:00
-Required timeout 00:01:00
 Required duration 00:20:00
+Required timeout 00:01:00
 Required side count 0
 Optimum number of sides 4
 Minimum side length 00:20:00
