@@ -23,7 +23,7 @@ Required timeout 00:01:00
 Optimum number of sides 4
 Minimum side length 00:20:00
 Packed sides
-deviation 0
+Side deviation 0
 Side 1 - 2 tracks 00:20:00
 Side 2 - 5 tracks 00:20:00
 Side 3 - 5 tracks 00:20:00
