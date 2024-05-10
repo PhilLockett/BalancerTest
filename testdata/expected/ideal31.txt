@@ -1,3 +1,5 @@
+Config is valid
+Input file name: "testdata/input/Ideal.txt"
 items:
    0  00:13:00 - Track 1 1
    1  00:07:00 - Track 1 2
@@ -17,11 +19,16 @@ items:
   15  00:02:30 - Track 4 7
   16  00:02:30 - Track 4 8
 
-Total duration 01:20:00
+Total track duration: 01:20:00
+Longest track: 00:13:00
+Track deviation: 00:03:10
+Search Timeout: 00:01:00
+Side Duration: 00:00:00
+Side count: 4
+Brute force method of reordering tracks requested.
+
 Required duration 00:22:00
-Required timeout 00:01:00
 Optimum number of sides 4
-Minimum side length 00:20:00
 Packed sides
 Side deviation 0
 Side 1 - 2 tracks 00:20:00
