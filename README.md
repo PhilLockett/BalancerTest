@@ -2,6 +2,8 @@
 Test code for [Balancer](https://github.com/PhilLockett/Balancer) (a
 command-line utility for balancing 'tracks' across multiple 'sides').
 
+**USE AT OWN RISK.**
+
 ## Overview
 A sequence of regression tests for the [Balancer](https://github.com/PhilLockett/Balancer) utility.
 
